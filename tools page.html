@@ -950,7 +950,26 @@
                 localStorage.setItem('preferred-theme', theme);
             }
 
-  function createToolCard(tool) {
+
+    // Global function declarations
+    window.toggleTheme = function(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('preferred-theme', theme);
+    };
+
+    window.filterTools = function(category) {
+        const filtered = category === 'All' 
+            ? tools 
+            : tools.filter(tool => tool.category === category);
+        renderTools(filtered);
+        
+        // Update active state of category buttons
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent === category);
+        });
+    };
+
+    function createToolCard(tool) {
         return `
             <div class="tool-card">
                 ${tool.isPremium ? '<span class="premium-badge">Premium</span>' : ''}
@@ -983,66 +1002,66 @@
         `;
     }
 
-   function filterTools(category) {
-        const filtered = category === 'All' 
-            ? tools 
-            : tools.filter(tool => tool.category === category);
-        renderTools(filtered);
+    function renderTools(toolsToRender) {
+        const toolsGrid = document.getElementById('toolsGrid');
+        toolsGrid.innerHTML = toolsToRender.map(createToolCard).join('');
+    }
 
-            function renderTools(toolsToRender) {
-                const toolsGrid = document.getElementById('toolsGrid');
-                toolsGrid.innerHTML = toolsToRender.map(createToolCard).join('');
-            }
+    function sortTools(sortBy) {
+        let sortedTools = [...tools];
+        switch(sortBy) {
+            case 'rating':
+                sortedTools.sort((a, b) => b.rating - a.rating);
+                break;
+            case 'popularity':
+                sortedTools.sort((a, b) => parseInt(b.uses.replace('K', '000')) - parseInt(a.uses.replace('K', '000')));
+                break;
+            case 'newest':
+                // Since we don't have dateAdded in the data, we'll use ID as a proxy for newest
+                sortedTools.sort((a, b) => b.id - a.id);
+                break;
+        }
+        renderTools(sortedTools);
+    }
 
-            function sortTools(sortBy) {
-                let sortedTools = [...tools];
-                switch(sortBy) {
-                    case 'rating':
-                        sortedTools.sort((a, b) => b.rating - a.rating);
-                        break;
-                    case 'popularity':
-                        sortedTools.sort((a, b) => parseInt(b.uses) - parseInt(a.uses));
-                        break;
-                    case 'newest':
-                        sortedTools.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
-                        break
-case 'newest':
-                        sortedTools.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
-                        break;
-                }
-                renderTools(sortedTools);
-            }
+    // Initialize the page
+    function init() {
+        // Set up categories
+        const categories = ['All', ...new Set(tools.map(tool => tool.category))].sort();
+        const categoriesContainer = document.getElementById('categories');
+        categoriesContainer.innerHTML = categories.map(category => 
+            `<button class="category-btn ${category === 'All' ? 'active' : ''}" onclick="filterTools('${category}')">${category}</button>`
+        ).join('');
 
-            // Get unique categories and render category buttons
-            const categories = ['All', ...new Set(tools.map(tool => tool.category))];
-            const categoriesContainer = document.getElementById('categories');
-            categoriesContainer.innerHTML = categories.map(category => 
-                `<button class="category-btn" onclick="filterTools('${category}')">${category}</button>`
-            ).join('');
+        // Set up event listeners
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredTools = tools.filter(tool => 
+                tool.title.toLowerCase().includes(searchTerm) || 
+                tool.description.toLowerCase().includes(searchTerm)
+            );
+            renderTools(filteredTools);
+        });
 
-            // Add event listeners
-            document.getElementById('searchInput').addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                const filteredTools = tools.filter(tool => 
-                    tool.title.toLowerCase().includes(searchTerm) || 
-                    tool.description.toLowerCase().includes(searchTerm)
-                );
-                renderTools(filteredTools);
-            });
+        document.getElementById('sortSelect').addEventListener('change', (e) => {
+            sortTools(e.target.value);
+        });
 
-            document.getElementById('sortSelect').addEventListener('change', (e) => {
-                sortTools(e.target.value);
-            });
+        // Set initial theme
+        const savedTheme = localStorage.getItem('preferred-theme') || 'light';
+        toggleTheme(savedTheme);
 
-            // Initialize
-            window.filterTools = filterTools;  // Make filterTools available globally
-            const savedTheme = localStorage.getItem('preferred-theme') || 'light';
-            toggleTheme(savedTheme);
-            window.toggleTheme = toggleTheme;  // Make toggleTheme available globally
-            
-            // Initial render
-            renderTools(tools);
-        })();
+        // Initial render of all tools
+        renderTools(tools);
+    }
+
+    // Call init when DOM is loaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
     </script>
 </body>
 </html>
