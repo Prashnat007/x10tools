@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools Suite</title>
+    <style>
+        :root {
+            --bg-gradient-start: #ffffff;
+            --bg-gradient-end: #f0f4f8;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-primary: #1a1a2e;
+            --text-secondary: #475569;
+            --accent-color: #3b82f6;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --hover-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --button-bg: #3b82f6;
+            --button-hover: #2563eb;
+        }
+
+        [data-theme="dark"] {
+            --bg-gradient-start: #1a1a2e;
+            --bg-gradient-end: #16213e;
+            --card-bg: rgba(30, 41, 59, 0.8);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --accent-color: #60a5fa;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --hover-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --button-bg: #60a5fa;
+            --button-hover: #3b82f6;
+        }
+
+        [data-theme="blue"] {
+            --bg-gradient-start: #1e3a8a;
+            --bg-gradient-end: #1e40af;
+            --card-bg: rgba(30, 58, 138, 0.8);
+            --text-primary: #ffffff;
+            --text-secondary: #bfdbfe;
+            --accent-color: #3b82f6;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --hover-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --button-bg: #60a5fa;
+            --button-hover: #93c5fd;
+        }
+
+        [data-theme="purple"] {
+            --bg-gradient-start: #4c1d95;
+            --bg-gradient-end: #5b21b6;
+            --card-bg: rgba(76, 29, 149, 0.8);
+            --text-primary: #ffffff;
+            --text-secondary: #ddd6fe;
+            --accent-color: #8b5cf6;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --hover-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --button-bg: #8b5cf6;
+            --button-hover: #a78bfa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .theme-switcher {
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+            background: var(--card-bg);
+            padding: 10px;
+            border-radius: 50px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .theme-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: var(--button-bg);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-btn:hover {
+            background: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 40px;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .hero-section p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 40px auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        .search-bar {
+            flex: 1;
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: 2px solid var(--accent-color);
+            background: var(--card-bg);
+            color: black;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+
+        .filter-select {
+            padding: 5px 5px;
+            border-radius: 10px;
+            border: 2px solid var(--accent-color);
+            background: var(--card-bg);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .categories {
+            display: flex;
+            gap: 15px;
+            padding: 20px;
+            overflow-x: auto;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+
+        .category-btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            border: none;
+            background: var(--button-bg);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .category-btn:hover {
+            background: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        .category-btn.active {
+            background: var(--accent-color);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .premium-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .tool-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--accent-color);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tool-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .tool-category {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 50px;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .tool-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .tool-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .stats-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .try-button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: var(--button-bg);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .try-button:hover {
+            background: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .theme-switcher {
+                top: auto;
+                bottom: 20px;
+                right: 50%;
+                transform: translateX(50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-switcher">
+        <button class="theme-btn" onclick="toggleTheme('light')">Light</button>
+        <button class="theme-btn" onclick="toggleTheme('dark')">Dark</button>
+        <button class="theme-btn" onclick="toggleTheme('blue')">Blue</button>
+        <button class="theme-btn" onclick="toggleTheme('purple')">Purple</button>
+    </div>
+
+    <div class="container">
+        <section class="hero-section">
+            <h1>AI Tools Suite</h1>
+            <p>Discover our powerful collection of AI-powered tools to enhance your workflow</p>
+            
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Search for tools..." id="searchInput">
+                <select class="filter-select" id="sortSelect">
+                    <option value="rating">Sort by Rating</option>
+                    <option value="popularity">Sort by Popularity</option>
+                    <option value="newest">Sort by Newest</option>
+                </select>
+            </div>
+        </section>
+
+        <div class="categories" id="categories"></div>
+        <div class="tools-grid" id="toolsGrid"></div>
+    </div>
+
+    <script>
+
+        (function() {
+// Enhanced tool data with URLs
+const tools = [
+    {
+        id: 1,
+        title: "AI Image Enhancer Pro",
+        category: "Image",
+        description: "Enhance image quality using advanced AI algorithms with support for multiple formats",
+        uses: "15.2K",
+        rating: 4.8,
+        isPremium: true,
+        url: "https://www.gadgetsfever.in"  // Custom URL for this tool
+    },
+    {
+        id: 2,
+        title: "Smart Text Analyzer",
+        category: "Text",
+        description: "Advanced NLP-powered text analysis for sentiment, readability, and key insights",
+        uses: "22.1K",
+        rating: 4.9,
+        isPremium: false,
+        url: "https://textanalyzer.com/tool"  // Custom URL for this tool
+    },
+    {
+        id: 3,
+        title: "AI Video Editor",
+        category: "Video",
+        description: "Automated video editing with AI-powered scene detection and enhancement",
+        uses: "18.7K",
+        rating: 4.7,
+        isPremium: true,
+        url: "https://aivideoeditor.com"  // Custom URL for this tool
+    },
+    {
+        id: 4,
+        title: "Neural Audio Master",
+        category: "Audio",
+        description: "Professional audio enhancement and noise reduction using neural networks",
+        uses: "12.3K",
+        rating: 4.6,
+        isPremium: true,
+        url: "https://neuralaudio.ai/master"  // Custom URL for this tool
+    },
+    {
+        id: 5,
+        title: "AI Research Assistant",
+        category: "Research",
+        description: "Intelligent research paper analysis and summary generation",
+        uses: "9.8K",
+        rating: 4.5,
+        isPremium: false,
+        url: "https://researchai.tools/assistant"  // Custom URL for this tool
+    },
+    {
+        id: 6,
+        title: "Code Refactor AI",
+        category: "Development",
+        description: "Automated code refactoring and optimization suggestions",
+        uses: "11.5K",
+        rating: 4.7,
+        isPremium: true,
+        url: "https://refactor.dev/ai"  // Custom URL for this tool
+    },
+    {
+        id: 7,
+        title: "AI Translation Pro",
+        category: "Language",
+        description: "Neural machine translation with context awareness for 100+ languages",
+        uses: "25.3K",
+        rating: 4.8,
+        isPremium: true,
+        url: "https://ai-translate.pro"  // Custom URL for this tool
+    },
+    {
+        id: 8,
+        title: "Data Visualization AI",
+        category: "Analytics",
+        description: "Create stunning data visualizations automatically",
+        uses: "14.2K",
+        rating: 4.6,
+        isPremium: false,
+        url: "https://datavis.ai/create"  // Custom URL for this tool
+    },
+    {
+        id: 9,
+        title: "AI Music Composer",
+        category: "Music",
+        description: "Generate original music compositions using deep learning",
+        uses: "8.9K",
+        rating: 4.4,
+        isPremium: true,
+        url: "https://aicomposer.music/studio"  // Custom URL for this tool
+    },
+    {
+        id: 10,
+        title: "3D Model Generator",
+        category: "3D",
+        description: "Create 3D models from text descriptions using AI",
+        uses: "7.5K",
+        rating: 4.3,
+        isPremium: true,
+        url: "https://3dgen.ai/create"  // Custom URL for this tool
+    },
+    {
+        id: 11,
+        title: "AI Document Scanner",
+        category: "Productivity",
+        description: "Smart document scanning with OCR and automatic organization",
+        uses: "19.8K",
+        rating: 4.7,
+        isPremium: false,
+        url: "https://scannerai.app"  // Custom URL for this tool
+    },
+    {
+        id: 12,
+        title: "Social Media Assistant",
+        category: "Marketing",
+        description: "AI-powered content creation and scheduling for social media",
+        uses: "16.4K",
+        rating: 4.5,
+        isPremium: true,
+        url: "https://socialmedia.ai/assistant"  // Custom URL for this tool
+    },
+    {
+        id: 13,
+        title: "AI Meeting Transcriber",
+        category: "Productivity",
+        description: "Real-time meeting transcription with speaker identification",
+        uses: "13.7K",
+        rating: 4.6,
+        isPremium: true,
+        url: "https://transcriber.ai/meeting"  // Custom URL for this tool
+    },
+    {
+        id: 14,
+        title: "SEO Optimizer AI",
+        category: "Marketing",
+        description: "Advanced SEO recommendations and content optimization",
+        uses: "11.9K",
+        rating: 4.4,
+        isPremium: false,
+        url: "https://seoai.tools/optimize"  // Custom URL for this tool
+    },
+    {
+        id: 15,
+        title: "AI Email Writer",
+        category: "Communication",
+        description: "Smart email composition with tone and style customization",
+        uses: "20.5K",
+        rating: 4.8,
+        isPremium: true,
+        url: "https://emailwriter.ai/compose"  // Custom URL for this tool
+    },
+    // Additional 50 AI tools
+const additionalTools = [
+    {
+        id: 16,
+        title: "AI Recipe Generator",
+        category: "Food",
+        description: "Create personalized recipes based on available ingredients and dietary preferences",
+        uses: "14.3K",
+        rating: 4.6,
+        isPremium: false,
+        url: "https://airecipes.cook/generate"
+    },
+    {
+        id: 17,
+        title: "Virtual Fashion Designer",
+        category: "Fashion",
+        description: "Design clothing using AI with custom measurements and style preferences",
+        uses: "11.2K",
+        rating: 4.5,
+        isPremium: true,
+        url: "https://fashionai.design/create"
+    },
+    {
+        id: 18,
+        title: "AI Fitness Coach",
+        category: "Health",
+        description: "Personalized workout plans and real-time form correction using computer vision",
+        uses: "19.8K",
+        rating: 4.7,
+        isPremium: true,
+        url: "https://aifitness.coach/personal"
+    },
+    {
+        id: 19,
+        title: "Legal Document Analyzer",
+        category: "Legal",
+        description: "AI-powered legal document analysis and contract review automation",
+        uses: "8.9K",
+        rating: 4.8,
+        isPremium: true,
+        url: "https://legalai.docs/analyze"
+    },
+    {
+        id: 20,
+        title: "AI Interior Designer",
+        category: "Design",
+        description: "Generate interior design concepts with AI space planning and color schemes",
+        uses: "13.5K",
+        rating: 4.4,
+        isPremium: true,
+        url: "https://aiinterior.design/create"
+    },
+    {
+        id: 21,
+        title: "Voice Clone Studio",
+        category: "Audio",
+        description: "Create synthetic voices and voice clones for various applications",
+        uses: "10.1K",
+        rating: 4.6,
+        isPremium: true,
+        url: "https://voiceclone.ai/studio"
+    },
+    {
+        id: 22,
+        title: "AI Comic Creator",
+        category: "Art",
+        description: "Generate comic strips and storyboards using AI art generation",
+        uses: "16.7K",
+        rating: 4.5,
+        isPremium: false,
+        url: "https://aicomics.create/studio"
+    },
+    {
+        id: 23,
+        title: "Smart Study Planner",
+        category: "Education",
+        description: "AI-powered study schedule optimization and learning path generation",
+        uses: "21.3K",
+        rating: 4.7,
+        isPremium: false,
+        url: "https://studyai.plan/smart"
+    },
+    {
+        id: 24,
+        title: "AI Travel Planner",
+        category: "Travel",
+        description: "Personalized travel itineraries and recommendations using AI",
+        uses: "17.8K",
+        rating: 4.6,
+        isPremium: true,
+        url: "https://aitravel.plan/itinerary"
+    },
+    {
+        id: 25,
+        title: "Plant Disease Detector",
+        category: "Agriculture",
+        description: "Identify plant diseases and get treatment recommendations using AI",
+        uses: "9.4K",
+        rating: 4.5,
+        isPremium: false,
+        url: "https://plantai.health/detect"
+    },
+    {
+        id: 26,
+        title: "AI Chess Trainer",
+        category: "Games",
+        description: "Personalized chess training and game analysis using AI",
+        uses: "12.6K",
+        rating: 4.8,
+        isPremium: true,
+        url: "https://chesstrainer.ai/learn"
+    },
+    {
+        id: 27,
+        title: "Architectural Design AI",
+        category: "Architecture",
+        description: "Generate architectural designs and 3D building models using AI",
+        uses: "8.9K",
+        rating: 4.6,
+        isPremium: true,
+        url: "https://archiai.design/create"
+    },
+    {
+        id: 28,
+        title: "AI Math Solver",
+        category: "Education",
+        description: "Step-by-step math problem solving with detailed explanations",
+        uses: "24.5K",
+        rating: 4.7,
+        isPremium: false,
+        url: "https://mathsolver.ai/solve"
+    },
+    {
+        id: 29,
+        title: "Logo Generator AI",
+        category: "Design",
+        description: "Create unique logos using AI with brand personality analysis",
+        uses: "19.2K",
+        rating: 4.5,
+        isPremium: true,
+        url: "https://logoai.create/generate"
+    },
+    {
+        id: 30,
+        title: "AI Financial Advisor",
+        category: "Finance",
+        description: "Personal finance recommendations and investment strategies using AI",
+        uses: "15.7K",
+        rating: 4.6,
+        isPremium: true,
+        url: "https://financeai.advisor/plan"
+    },
+    {
+        id: 31,
+        title: "AI Poetry Writer",
+        category: "Writing",
+        description: "Generate creative poetry in various styles using AI",
+        uses: "11.3K",
+        rating: 4.4,
+        isPremium: false,
+        url: "https://aipoet.write/create"
+    },
+    {
+        id: 32,
+        title: "Medical Symptom Analyzer",
+        category: "Healthcare",
+        description: "AI-powered preliminary medical symptom analysis and recommendations",
+        uses: "18.9K",
+        rating: 4.7,
+        isPremium: true,
+        url: "https://medicalai.analyze/symptoms"
+    },
+    {
+        id: 33,
+        title: "AI Song Writer",
+        category: "Music",
+        description: "Generate original song lyrics and melodies using AI",
+        uses: "13.4K",
+        rating: 4.5,
+        isPremium: true,
+        url: "https://songwriterai.music/create"
+    },
+    {
+        id: 34,
+        title: "Pet Behavior Analyzer",
+        category: "Pets",
+        description: "Analyze pet behavior and get training recommendations using AI",
+        uses: "10.8K",
+        rating: 4.3,
+        isPremium: false,
+        url: "https://petai.behavior/analyze"
+    },
+    {
+        id: 35,
+        title: "AI Resume Builder",
+        category: "Career",
+        description: "Create optimized resumes with AI-powered content suggestions",
+        uses: "22.1K",
+        rating: 4.6,
+        isPremium: false,
+        url: "https://resumeai.build/create"
+    },
+    // Continuing with more tools...
+    {
+        id: 36,
+        title: "Smart Garden Planner",
+        category: "Agriculture",
+        description: "Plan and optimize your garden layout using AI recommendations",
+        uses: "7.8K",
+        rating: 4.4,
+        isPremium: false,
+        url: "https://gardenai.plan/design"
+    },
+    {
+        id: 37,
+        title: "AI Presentation Maker",
+        category: "Productivity",
+        description: "Create engaging presentations with AI-generated content and designs",
+        uses: "16.9K",
+        rating: 4.7,
+        isPremium: true,
+        url: "https://apresent.ai/create"
+    },
+    {
+        id: 38,
+        title: "Voice Accent Trainer",
+        category: "Language",
+        description: "Improve accent and pronunciation with AI speech analysis",
+        uses: "12.4K",
+        rating: 4.5,
+        isPremium: true,
+        url: "https://accentai.train/practice"
+    },
+    {
+        id: 39,
+        title: "AI Interview Coach",
+        category: "Career",
+        description: "Practice interviews with AI-powered feedback and analysis",
+        uses: "14.7K",
+        rating: 4.6,
+        isPremium: true,
+        url: "https://interviewai.coach/practice"
+    },
+    {
+        id: 40,
+        title: "Book Summary Generator",
+        category: "Education",
+        description: "Generate comprehensive book summaries using AI analysis",
+        uses: "19.3K",
+        rating: 4.5,
+        isPremium: false,
+        url: "https://booksummai.read/summarize"
+    },
+    {
+        id: 41,
+        title: "AI Meditation Guide",
+        category: "Wellness",
+        description: "Personalized meditation sessions with AI-adapted guidance",
+        uses: "11.6K",
+        rating: 4.4,
+        isPremium: false,
+        url: "https://meditateai.guide/session"
+    },
+    {
+        id: 42,
+        title: "Patent Search AI",
+        category: "Legal",
+        description: "Intelligent patent search and analysis using AI",
+        uses: "6.9K",
+        rating: 4.7,
+        isPremium: true,
+        url: "https://patentai.search/analyze"
+    },
+    {
+        id: 43,
+        title: "AI Gift Recommender",
+        category: "Shopping",
+        description: "Get personalized gift recommendations using AI",
+        uses: "15.8K",
+        rating: 4.3,
+        isPremium: false,
+        url: "https://giftai.recommend/find"
+    },
+    {
+        id: 44,
+        title: "Climate Impact Analyzer",
+        category: "Environment",
+        description: "Analyze and optimize environmental impact using AI",
+        uses: "9.2K",
+        rating: 4.6,
+        isPremium: true,
+        url: "https://climateai.analyze/impact"
+    },
+    {
+        id: 45,
+        title: "AI Dating Profile Optimizer",
+        category: "Lifestyle",
+        description: "Optimize dating profiles with AI-powered suggestions",
+        uses: "13.7K",
+        rating: 4.4,
+        isPremium: true,
+        url: "https://datingai.optimize/profile"
+    },
+    {
+        id: 46,
+        title: "Smart Home Designer",
+        category: "Home",
+        description: "Design smart home automation systems using AI",
+        uses: "8.5K",
+        rating: 4.5,
+        isPremium: true,
+        url: "https://smarthomeai.design/plan"
+    },
+    {
+        id: 47,
+        title: "AI Art Curator",
+        category: "Art",
+        description: "Get personalized art recommendations using AI",
+        uses: "7.3K",
+        rating: 4.3,
+        isPremium: false,
+        url: "https://artai.curate/discover"
+    },
+    {
+        id: 48,
+        title: "Business Name Generator",
+        category: "Business",
+        description: "Generate unique business names using AI branding analysis",
+        uses: "20.4K",
+        rating: 4.5,
+        isPremium: false,
+        url: "https://businessnameai.generate/create"
+    },
+    {
+        id: 49,
+        title: "AI Party Planner",
+        category: "Events",
+        description: "Plan events with AI-powered recommendations and scheduling",
+        uses: "12.1K",
+        rating: 4.4,
+        isPremium: false,
+        url: "https://partyai.plan/organize"
+    },
+    {
+        id: 50,
+        title: "Handwriting Analyzer",
+        category: "Analysis",
+        description: "Analyze handwriting characteristics using AI",
+        uses: "9.7K",
+        rating: 4.2,
+        isPremium: true,
+        url: "https://handwritingai.analyze/assess"
+    },
+    {
+        id: 51,
+        title: "AI Wine Sommelier",
+        category: "Food",
+        description: "Get personalized wine recommendations using AI",
+        uses: "11.2K",
+        rating: 4.6,
+        isPremium: true,
+        url: "https://wineai.recommend/pair"
+    },
+    {
+        id: 52,
+        title: "Smart Budget Planner",
+        category: "Finance",
+        description: "AI-powered personal budget optimization and forecasting",
+        uses: "17.8K",
+        rating: 4.7,
+        isPremium: false,
+        url: "https://budgetai.plan/optimize"
+    },
+    {
+        id: 53,
+        title: "AI Tattoo Designer",
+        category: "Art",
+        description: "Design custom tattoos using AI art generation",
+        uses: "14.3K",
+        rating: 4.4,
+        isPremium: true,
+        url: "https://tattooai.design/create"
+    },
+    {
+        id: 54,
+        title: "Podcast Transcriber Pro",
+        category: "Audio",
+        description: "Accurate podcast transcription with speaker identification",
+        uses: "13.1K",
+        rating: 4.5,
+        isPremium: true,
+        url: "https://podcastai.transcribe/pro"
+    },
+    {
+        id: 55,
+        title: "AI Essay Grader",
+        category: "Education",
+        description: "Automated essay grading with detailed feedback using AI",
+        uses: "16.5K",
+        rating: 4.6,
+        isPremium: false,
+        url: "https://essayai.grade/analyze"
+    },
+    {
+        id: 56,
+        title: "Color Palette Generator",
+        category: "Design",
+        description: "Generate harmonious color palettes using AI",
+        uses: "21.2K",
+        rating: 4.5,
+        isPremium: false,
+        url: "https://colorai.generate/palette"
+    },
+    {
+        id: 57,
+        title: "AI Real Estate Valuator",
+        category: "Real Estate",
+        description: "Accurate property valuation using AI market analysis",
+        uses: "10.4K",
+        rating: 4.7,
+        isPremium: true,
+        url: "https://propertyai.value/estimate"
+    },
+    {
+        id: 58,
+        title: "Language Accent Generator",
+        category: "Language",
+        description: "Generate text-to-speech in various accents using AI",
+        uses: "8.9K",
+        rating: 4.3,
+        isPremium: true,
+        url: "https://accentai.generate/speak"
+    },
+    {
+        id: 59,
+        title: "AI Joke Writer",
+        category: "Entertainment",
+        description: "Generate original jokes and comedy content using AI",
+        uses: "15.7K",
+        rating: 4.2,
+        isPremium: false,
+        url: "https://jokeai.write/create"
+    },
+    {
+        id: 60,
+        title: "Smart Sleep Analyzer",
+        category: "Health",
+        description: "Analyze sleep patterns and get AI-powered recommendations",
+        uses: "12.8K",
+        rating: 4.6,
+        isPremium: true,
+        url: "https://sleepai.analyze/improve"
+    },
+];
+
+
+            function toggleTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('preferred-theme', theme);
+            }
+
+ function createToolCard(tool) {
+    return `
+        <div class="tool-card">
+            ${tool.isPremium ? '<span class="premium-badge">Premium</span>' : ''}
+            <div class="tool-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+            </div>
+            <h3 class="tool-title">${tool.title}</h3>
+            <span class="tool-category">${tool.category}</span>
+            <p class="tool-description">${tool.description}</p>
+            <div class="tool-stats">
+                <div class="stats-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    ${tool.rating}
+                </div>
+                <div class="stats-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20v-6M6 20V10M18 20V4"></path>
+                    </svg>
+                    ${tool.uses} uses
+                </div>
+            </div>
+            <a href="${tool.url}" class="tool-link" target="_blank" rel="noopener noreferrer">
+                <button class="try-button">Try Now</button>
+            </a>
+        </div>
+    `;
+}
+
+            function filterTools(category) {
+                const filtered = category === 'All' 
+                    ? tools 
+                    : tools.filter(tool => tool.category === category);
+                renderTools(filtered);
+            }
+
+            function renderTools(toolsToRender) {
+                const toolsGrid = document.getElementById('toolsGrid');
+                toolsGrid.innerHTML = toolsToRender.map(createToolCard).join('');
+            }
+
+            function sortTools(sortBy) {
+                let sortedTools = [...tools];
+                switch(sortBy) {
+                    case 'rating':
+                        sortedTools.sort((a, b) => b.rating - a.rating);
+                        break;
+                    case 'popularity':
+                        sortedTools.sort((a, b) => parseInt(b.uses) - parseInt(a.uses));
+                        break;
+                    case 'newest':
+                        sortedTools.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+                        break
+case 'newest':
+                        sortedTools.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+                        break;
+                }
+                renderTools(sortedTools);
+            }
+
+            // Get unique categories and render category buttons
+            const categories = ['All', ...new Set(tools.map(tool => tool.category))];
+            const categoriesContainer = document.getElementById('categories');
+            categoriesContainer.innerHTML = categories.map(category => 
+                `<button class="category-btn" onclick="filterTools('${category}')">${category}</button>`
+            ).join('');
+
+            // Add event listeners
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredTools = tools.filter(tool => 
+                    tool.title.toLowerCase().includes(searchTerm) || 
+                    tool.description.toLowerCase().includes(searchTerm)
+                );
+                renderTools(filteredTools);
+            });
+
+            document.getElementById('sortSelect').addEventListener('change', (e) => {
+                sortTools(e.target.value);
+            });
+
+            // Initialize
+            window.filterTools = filterTools;  // Make filterTools available globally
+            const savedTheme = localStorage.getItem('preferred-theme') || 'light';
+            toggleTheme(savedTheme);
+            window.toggleTheme = toggleTheme;  // Make toggleTheme available globally
+            
+            // Initial render
+            renderTools(tools);
+        })();
+    </script>
+</body>
+</html>
